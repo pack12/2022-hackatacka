@@ -7,6 +7,8 @@ class Frog:
         self.player_y = y
         self.h_velocity = h_velocity
         self.v_velocity = v_velocity
+        self.state = "free"
+        self.state2 = None
 
 
         if(state) == "idle":
@@ -15,7 +17,8 @@ class Frog:
             self.img_path = "Images/Ninja Frog/Run (32x32).png"
         elif state == "falling":
             self.img_path = "Images/frog_fall.png"
-            self.player_y+=v_velocity
+            # self.player_y+=v_velocity
+
 
 
 
@@ -33,36 +36,60 @@ class Frog:
 
         display.blit(frog, (self.player_x, self.player_y))
     def check_player_blck_collision(self,block_dict):
+
+
+
         for i in block_dict:
 
-            if block_dict[i]['rect'].x == self.player_x  and block_dict[i]['rect'].y -40 == self.player_y and block_dict[i]['type'] == 1:
+            if block_dict[i]['rect'].y -40 == self.player_y and block_dict[i]['type'] == 1:
                 self.state = "idle"
-                time.sleep(0.5)
-                # self.v_velocity = 0
-                # self.h_velocity = 0
-                # print("collision")
-            # elif block_dict[i]['center'][0] == self.player_x  and block_dict[i]['center'][1] + 10 == self.player_y and block_dict[i]['type'] == 0:
-            #     self.state = "idle"
-            #     print("collisoin")
+                # print("player_x", self.player_x)
+                # print(i,block_dict[i])
+
+
 
 
             elif block_dict[i]['rect'].y < self.player_y and block_dict[i]['type'] ==2:
                 self.state = "falling"
 
+    # def check_falling(self, block_dict):
+    #     for i in block_dict:
+    #         if block_dict[i]['rect'].x == self.player_x and block_dict[i]['rect'].y == self.player_y:
+    #             print(block_dict[i])
+    #             # self.state = "falling"
 
-    def move_frog(self):
-        self.player_x+=1
 
 
-    def update_position(self):
+
+
+
+    def update_position(self, jump,running, direction,stop):
         print(self.state)
-        if self.state == "falling":
-            # self.v_velocity+=0.15
-            self.player_y += 1
-        elif self.state == "idle":
+        if(stop != True):
 
-            self.v_velocity = 0
-            self.h_velocity = 0
+            if self.state == "falling":
+                # self.v_velocity+=0.15
+                self.player_y += 1
+            elif self.state == "idle" and running == True and direction == "right":
+                print("yoo")
+                self.h_velocity +=0.01
+                self.player_x +=self.h_velocity
+            elif self.state == "idle" and running == True and direction == "left":
+
+                self.h_velocity -= 0.01
+                self.player_x -= self.h_velocity
+            elif self.state == "idle" and jump == True:
+                print("Jumping for joy!")
+                self.v_velocity+=5
+                self.player_y-=self.v_velocity
+            elif self.state == "idle":
+
+                self.v_velocity = 0
+                self.h_velocity = 0
+
+
+
+
 
 
 

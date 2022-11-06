@@ -35,15 +35,22 @@ print(tile_dictionary)
 
 
 frog = Frog(96, 500, 0, 0, "idle")
-print(frog.img_path)
+print(frog.state)
+running = False
+direction = None
+jump = False
+stop = False
+stop_count = 0
 
+tile_dictionary['block_98']['type'] = 1
 while(run):
     mouse_pos = pygame.mouse.get_pos()
     # print(mouse_pos)
     display_surface.blit(background_img, (0,0))
     map.draw_map(tile_dictionary, display_surface)
     frog.check_player_blck_collision(tile_dictionary)
-    frog.update_position()
+    print("running:", running, "direction: ", direction)
+    frog.update_position(jump,running, direction, stop)
     frog.draw_player(display_surface)
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -52,8 +59,24 @@ while(run):
                 print("Mouse Pos:", mouse_pos)
             if event.key == pygame.K_RIGHT:
 
-                print("running")
-                frog.state = "running"
+                running = True
+                direction = "right"
+            elif event.key == pygame.K_LEFT:
+                running = True
+                direction = "left"
+            elif event.key == pygame.K_SPACE:
+                jump = True
+                running = False
+            elif event.key == pygame.K_s:
+                stop_count+=1
+                if stop_count %2 == 0:
+                    stop = False
+                elif stop_count %2 != 0:
+
+                    stop = True
+                    running = False
+                    jump = False
+
         if event.type == pygame.QUIT:
             run = False
     pygame.display.flip()
